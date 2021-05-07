@@ -1,6 +1,8 @@
 const { NodeTracerProvider } = require('@opentelemetry/node');
 const { ConsoleSpanExporter, SimpleSpanProcessor } = require('@opentelemetry/tracing');
 const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
+const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
+
 const { registerInstrumentations } = require('@opentelemetry/instrumentation');
 
 
@@ -11,7 +13,11 @@ provider.addSpanProcessor(spanProcessor);
 provider.register()
 
 registerInstrumentations({
-  instrumentations: [new HttpInstrumentation()],
+  instrumentations: [
+    // Express instrumentation expects HTTP layer to be instrumented
+    new HttpInstrumentation(),
+    new ExpressInstrumentation(),
+  ],
   tracerProvider: provider,
 });
 
