@@ -1,4 +1,4 @@
-const tracer = require('./another_tracer')('example-express-client');
+const tracer = require('./tracer')('example-express-client');
 const express = require('express')
 const app = express()
 const port = 5000

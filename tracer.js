@@ -10,11 +10,20 @@ const { SimpleSpanProcessor } = require('@opentelemetry/tracing');
 const { JaegerExporter } = require('@opentelemetry/exporter-jaeger');
 const { ZipkinExporter } = require('@opentelemetry/exporter-zipkin');
 
-const Exporter = (process.env.EXPORTER || '').toLowerCase().startsWith('z') ? ZipkinExporter : JaegerExporter;
+const { BasicTracerProvider, BatchSpanProcessor } = require('@opentelemetry/tracing');
+const { CollectorTraceExporter } = require('@opentelemetry/exporter-collector');
+
+// const Exporter = (process.env.EXPORTER || '').toLowerCase().startsWith('z') ? ZipkinExporter : JaegerExporter;
 const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
 const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
 
+
+
 module.exports = (serviceName) => {
+  const collectorOptions = {
+    serviceName: serviceName
+  };
+  const exporter = new CollectorTraceExporter(collectorOptions);
   const provider = new NodeTracerProvider();
   registerInstrumentations({
     tracerProvider: provider,
@@ -25,9 +34,9 @@ module.exports = (serviceName) => {
     ],
   });
 
-  const exporter = new Exporter({
-    serviceName,
-  });
+  // const exporter = new Exporter({
+  //   serviceName,
+  // });
 
   provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
 
