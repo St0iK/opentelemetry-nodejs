@@ -10,7 +10,7 @@ const { ElasticsearchTransport } = require('winston-elasticsearch');
 const esTransportOpts = {
   level: 'info',
   clientOpts: {
-    node: 'http://localhost:9200',
+    node: 'http://localhost:9200', // es01:9200 running in a container on the same network
     log: 'debug',
     maxRetries: 2,
     requestTimeout: 10000,
