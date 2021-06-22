@@ -18,6 +18,8 @@
     "@opentelemetry/instrumentation-http": "^0.19.0",
     "@opentelemetry/node": "^0.19.0",
     "express": "^4.17.1",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "winston": "^3.3.3",
+    "winston-elasticsearch": "^0.15.6"
   }
 }

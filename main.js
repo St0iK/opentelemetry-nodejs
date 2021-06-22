@@ -4,6 +4,33 @@ const express = require('express')
 const app = express()
 const port = 4000
 
+const winston = require('winston');
+const { ElasticsearchTransport } = require('winston-elasticsearch');
+
+const esTransportOpts = {
+  level: 'info',
+  clientOpts: {
+    node: 'http://localhost:9200',
+    log: 'debug',
+    maxRetries: 2,
+    requestTimeout: 10000,
+    sniffOnStart: false,
+  }
+};
+const esTransport = new ElasticsearchTransport(esTransportOpts);
+const logger = winston.createLogger({
+  transports: [
+    esTransport
+  ]
+});
+// Compulsory error handling
+logger.on('error', (error) => {
+  console.error('Error caught', error);
+});
+esTransport.on('warning', (error) => {
+  console.error('Error caught', error);
+});
+
 const getUrlContents = function (url, fetch) {
   return new Promise((resolve, reject) => {
     fetch(url)
@@ -11,6 +38,15 @@ const getUrlContents = function (url, fetch) {
       .then(body => resolve(body));
   })
 }
+
+logger.debug('a debug message');
+logger.info('an info log');
+
+msg = 'RSAP0001I: Transaction OK'
+logger.info(msg, { "errCode": "RSAP0001I", "transactionTime": 1 })
+
+msg = 'RSAP0010E: Severe problem detected'
+logger.error(msg, { "errorCode": "RSAP0010E", "transactionTime": 2 })
 
 app.get('/main', async function (req, res) {
 
