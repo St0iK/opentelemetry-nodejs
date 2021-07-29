@@ -1,0 +1,48 @@
+{
+  "name": "mars-service",
+  "version": "1.0.0",
+  "description": "Mars Service",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node src/index.js",
+    "test": "jest --detectOpenHandles --forceExit",
+    "test:ci": "jest --detectOpenHandles --forceExit --runInBand --reporters=default --reporters=jest-junit",
+    "lint": "eslint \"**/*.js\"",
+    "build": "babel src --out-dir dist",
+    "start": "node --unhandled-rejections=strict dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0",
+    "getenv": "^1.0.0",
+    "koa": "^2.13.0",
+    "koa-router": "^9.4.0",
+    "nodemon": "^2.0.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.10.0",
+    "@babel/node": "7.10.1",
+    "@babel/preset-env": "7.10.0",
+    "eslint": "^7.14.0",
+    "eslint-plugin-filenames": "^1.3.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.3",
+    "eslint-plugin-json": "^2.1.2",
+    "jest": "^26.6.3",
+    "jest-junit": "^12.0.0"
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "rules": {
+      "semi": "error"
+    }
+  }
+}

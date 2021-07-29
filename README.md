@@ -1,20 +1,18 @@
-# opentelemetry-nodejs
+# OpenTelemetry Node.js Playground
 
-Open Telemetry Node.js WIP
+```
+docker-compose up
+```
 
-https://github.com/open-telemetry/opentelemetry-js-contrib/tree/main/examples/express
+- Grafana: http://localhost:3000/login (admin/admin)
+- Zipkin: http://localhost:9411/zipkin/
+- Prometheus: http://localhost:9090/graph
+- Jeager: http://localhost:9411/zipkin/
 
-## Traceparent
+## ELK Stack
 
-- https://www.w3.org/TR/trace-context/#traceparent-header
-
-```json
-{
-  "accept": "*/*",
-  "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
-  "accept-encoding": "gzip,deflate",
-  "connection": "close",
-  "traceparent": "00-68d60239f9d767b534d2374b1de229a1-3390e51c6a47ee37-01",
-  "host": "localhost:5000"
-}
+```
+docker-compose -f elk-docker-compose.yml up
+- http://localhost:9200/
+- Kibana: http://localhost:5601/app/home
 ```

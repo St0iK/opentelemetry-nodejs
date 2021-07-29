@@ -1,0 +1,24 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true,
+    "node": true
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js"]
+      }
+    }
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "rules": {
+    "strict": "error",
+    "jest/no-focused-tests": "error",
+    "camelcase": "error"
+  },
+  "plugins": ["jest", "json", "filenames"]
+}
