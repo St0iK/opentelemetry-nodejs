@@ -1,5 +1,6 @@
 const opentelemetry = require('@opentelemetry/api');
-
+const { Resource } = require('@opentelemetry/resources');
+const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
 // Not functionally required but gives some insight what happens behind the scenes
 const { diag, DiagConsoleLogger, DiagLogLevel } = opentelemetry;
 diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
@@ -11,20 +12,29 @@ const { SimpleSpanProcessor } = require('@opentelemetry/tracing');
 const { BasicTracerProvider, BatchSpanProcessor } = require('@opentelemetry/tracing');
 const { CollectorTraceExporter } = require('@opentelemetry/exporter-collector');
 
-// const Exporter = (process.env.EXPORTER || '').toLowerCase().startsWith('z') ? ZipkinExporter : JaegerExporter;
-// const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
 const { KoaInstrumentation } = require('@opentelemetry/instrumentation-koa');
 const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
 
 module.exports = (serviceName) => {
+
+  const provider = new NodeTracerProvider({
+    resource: new Resource({
+      [SemanticResourceAttributes.SERVICE_NAME]: serviceName,
+    }),
+  });
+
   console.log({ serviceName })
   const collectorOptions = {
-    url: 'http://collector:55681/v1/trace',
-    serviceName: serviceName
+    url: 'http://collector:55681/v1/trace'
   };
 
   const exporter = new CollectorTraceExporter(collectorOptions);
-  const provider = new NodeTracerProvider();
+
+  provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
+
+  // Initialize the OpenTelemetry APIs to use the NodeTracerProvider bindings
+  provider.register();
+
   registerInstrumentations({
     tracerProvider: provider,
     instrumentations: [
@@ -34,14 +44,7 @@ module.exports = (serviceName) => {
     ],
   });
 
-  // const exporter = new Exporter({
-  //   serviceName,
-  // });
 
-  provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
-
-  // Initialize the OpenTelemetry APIs to use the NodeTracerProvider bindings
-  provider.register();
 
   return opentelemetry.trace.getTracer('default-tracer');
 };
