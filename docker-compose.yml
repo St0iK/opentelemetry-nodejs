@@ -19,7 +19,7 @@ services:
     image: otel/opentelemetry-collector:latest
     command: ["--config=/conf/collector-config.yaml", "--log-level=DEBUG"]
     volumes:
-      - ./config/optl-collector-config.yaml:/conf/collector-config.yaml
+      - ./config/otlp-collector-config.yaml:/conf/collector-config.yaml
     ports:
       - "9464:9464"
       - "55680:55680"
@@ -35,7 +35,7 @@ services:
     container_name: zipkin
     restart: on-failure
     ports:
-      - 9411:9411
+      - "9411:9411"
     networks:
       - opentelemetry-playground
 
@@ -45,7 +45,7 @@ services:
     environment:
       - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel
     ports:
-      - 3000:3000
+      - "3000:3000"
     restart: on-failure
     volumes:
       - grafana:/var/lib/grafana
@@ -59,7 +59,7 @@ services:
       - prometheus:/prometheus
       - ./config/prometheus.yaml:/etc/prometheus/prometheus.yaml
     ports:
-      - 9090:9090
+      - "9090:9090"
     restart: on-failure
     networks:
       - opentelemetry-playground
@@ -69,13 +69,13 @@ services:
     container_name: jaeger
     restart: on-failure
     ports:
-      - 5775:5775/udp
-      - 5778:5778
-      - 6831:6831/udp
-      - 6832:6832/udp
+      - "5775:5775/udp"
+      - "5778:5778"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
       # - 9411:9411
-      - 14268:14268
-      - 16686:16686
+      - "14268:14268"
+      - "16686:16686"
     networks:
       - opentelemetry-playground
 
