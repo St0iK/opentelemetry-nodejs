@@ -14,15 +14,16 @@ const { BasicTracerProvider, BatchSpanProcessor } = require('@opentelemetry/trac
 const { CollectorTraceExporter } = require('@opentelemetry/exporter-collector');
 
 // const Exporter = (process.env.EXPORTER || '').toLowerCase().startsWith('z') ? ZipkinExporter : JaegerExporter;
-const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
+// const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
+const { KoaInstrumentation } = require('@opentelemetry/instrumentation-koa');
 const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
 
-
-
 module.exports = (serviceName) => {
+  console.log({ serviceName })
   const collectorOptions = {
     serviceName: serviceName
   };
+
   const exporter = new CollectorTraceExporter(collectorOptions);
   const provider = new NodeTracerProvider();
   registerInstrumentations({
@@ -30,7 +31,7 @@ module.exports = (serviceName) => {
     instrumentations: [
       // Express instrumentation expects HTTP layer to be instrumented
       HttpInstrumentation,
-      ExpressInstrumentation,
+      KoaInstrumentation,
     ],
   });
 
@@ -43,5 +44,5 @@ module.exports = (serviceName) => {
   // Initialize the OpenTelemetry APIs to use the NodeTracerProvider bindings
   provider.register();
 
-  return opentelemetry.trace.getTracer('express-example');
+  return opentelemetry.trace.getTracer('default-tracer');
 };

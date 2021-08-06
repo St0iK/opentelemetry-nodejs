@@ -1,12 +1,25 @@
 version: "3.8"
 
 services:
-  # Collector
+  # Mars service
+  mars-service:
+    build:
+      context: ./src/mars-service
+    env_file:
+      - ./src/mars-service/.env.dev
+    # volumes:
+    #   - .:/usr/src/app
+    #   - /usr/src/app/node_modules
+
+    ports:
+      - "5000:80"
+
+      # OpenTelemetry Collector
   collector:
     image: otel/opentelemetry-collector:latest
     command: ["--config=/conf/collector-config.yaml", "--log-level=DEBUG"]
     volumes:
-      - ./collector-config.yaml:/conf/collector-config.yaml
+      - ./config/optl-collector-config.yaml:/conf/collector-config.yaml
     ports:
       - "9464:9464"
       - "55680:55680"
@@ -15,7 +28,7 @@ services:
       - jaeger
       - zipkin
     networks:
-      - coolstore
+      - opentelemetry-playground
 
   zipkin:
     image: openzipkin/zipkin:latest
@@ -24,7 +37,7 @@ services:
     ports:
       - 9411:9411
     networks:
-      - coolstore
+      - opentelemetry-playground
 
   grafana:
     image: grafana/grafana:latest
@@ -37,19 +50,19 @@ services:
     volumes:
       - grafana:/var/lib/grafana
     networks:
-      - coolstore
+      - opentelemetry-playground
 
   prometheus:
     image: prom/prometheus:v2.11.1
     container_name: prometheus
     volumes:
       - prometheus:/prometheus
-      # - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yaml
     ports:
       - 9090:9090
     restart: on-failure
     networks:
-      - coolstore
+      - opentelemetry-playground
 
   jaeger:
     image: jaegertracing/all-in-one
@@ -64,12 +77,12 @@ services:
       - 14268:14268
       - 16686:16686
     networks:
-      - coolstore
+      - opentelemetry-playground
 
 volumes:
   grafana:
   prometheus:
 
 networks:
-  coolstore:
-    name: coolstore-network
+  opentelemetry-playground:
+    name: opentelemetry-playground-network
