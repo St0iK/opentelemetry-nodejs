@@ -14,6 +14,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@opentelemetry/api": "^1.0.2",
+    "@opentelemetry/exporter-collector": "^0.24.0",
+    "@opentelemetry/instrumentation": "^0.24.0",
+    "@opentelemetry/instrumentation-http": "^0.24.0",
+    "@opentelemetry/instrumentation-koa": "^0.24.0",
+    "@opentelemetry/node": "^0.24.0",
+    "@opentelemetry/tracing": "^0.24.0",
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "getenv": "^1.0.0",
@@ -22,7 +29,7 @@
     "nodemon": "^2.0.4"
   },
   "devDependencies": {
-    "@babel/cli": "7.10.0",
+    "@babel/cli": "^7.14.8",
     "@babel/node": "7.10.1",
     "@babel/preset-env": "7.10.0",
     "eslint": "^7.14.0",

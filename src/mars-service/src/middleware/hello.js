@@ -1,6 +1,6 @@
-import tracer from '../../../../legacy-implementation/tracer';
-
-tracer('test-tracer')
+import tracer from './../utils/tracer';
+//const tr = tracer('hello-client');
 export default async (ctx) => {
+  console.log('running!')
   ctx.body = 'Hello from jimstoik13';
 };
