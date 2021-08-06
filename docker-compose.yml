@@ -7,14 +7,12 @@ services:
       context: ./src/mars-service
     env_file:
       - ./src/mars-service/.env.dev
-    # volumes:
-    #   - .:/usr/src/app
-    #   - /usr/src/app/node_modules
-
     ports:
       - "5000:80"
+    networks:
+      - playground
 
-      # OpenTelemetry Collector
+  # OpenTelemetry Collector
   collector:
     image: otel/opentelemetry-collector:latest
     command: ["--config=/conf/collector-config.yaml", "--log-level=DEBUG"]
@@ -28,7 +26,7 @@ services:
       - jaeger
       - zipkin
     networks:
-      - opentelemetry-playground
+      - playground
 
   zipkin:
     image: openzipkin/zipkin:latest
@@ -37,7 +35,7 @@ services:
     ports:
       - "9411:9411"
     networks:
-      - opentelemetry-playground
+      - playground
 
   grafana:
     image: grafana/grafana:latest
@@ -50,7 +48,7 @@ services:
     volumes:
       - grafana:/var/lib/grafana
     networks:
-      - opentelemetry-playground
+      - playground
 
   prometheus:
     image: prom/prometheus:v2.11.1
@@ -62,7 +60,7 @@ services:
       - "9090:9090"
     restart: on-failure
     networks:
-      - opentelemetry-playground
+      - playground
 
   jaeger:
     image: jaegertracing/all-in-one
@@ -77,12 +75,12 @@ services:
       - "14268:14268"
       - "16686:16686"
     networks:
-      - opentelemetry-playground
+      - playground
 
 volumes:
   grafana:
   prometheus:
 
 networks:
-  opentelemetry-playground:
-    name: opentelemetry-playground-network
+  playground:
+    name: playground-network

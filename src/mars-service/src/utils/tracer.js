@@ -1,32 +1,47 @@
-'use strict';
-console.log(__filename);
+const opentelemetry = require('@opentelemetry/api');
+
+// Not functionally required but gives some insight what happens behind the scenes
+const { diag, DiagConsoleLogger, DiagLogLevel } = opentelemetry;
+diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
+
+const { registerInstrumentations } = require('@opentelemetry/instrumentation');
+const { NodeTracerProvider } = require('@opentelemetry/node');
+const { SimpleSpanProcessor } = require('@opentelemetry/tracing');
+
+const { BasicTracerProvider, BatchSpanProcessor } = require('@opentelemetry/tracing');
+const { CollectorTraceExporter } = require('@opentelemetry/exporter-collector');
+
+// const Exporter = (process.env.EXPORTER || '').toLowerCase().startsWith('z') ? ZipkinExporter : JaegerExporter;
+// const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
 const { KoaInstrumentation } = require('@opentelemetry/instrumentation-koa');
 const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
 
-const api = require('@opentelemetry/api');
-const { registerInstrumentations } = require('@opentelemetry/instrumentation');
-const { NodeTracerProvider } = require('@opentelemetry/node');
-const { ConsoleSpanExporter, SimpleSpanProcessor } = require('@opentelemetry/tracing');
-
-const EXPORTER = process.env.EXPORTER || '';
-
 module.exports = (serviceName) => {
-  console.log({serviceName})
+  console.log({ serviceName })
+  const collectorOptions = {
+    url: 'http://collector:55681/v1/trace',
+    serviceName: serviceName
+  };
+
+  const exporter = new CollectorTraceExporter(collectorOptions);
   const provider = new NodeTracerProvider();
-
-  const exporter = new ConsoleSpanExporter();
-  provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
-
   registerInstrumentations({
-    instrumentations: [
-      new KoaInstrumentation(),
-      new HttpInstrumentation(),
-    ],
     tracerProvider: provider,
+    instrumentations: [
+      // Express instrumentation expects HTTP layer to be instrumented
+      HttpInstrumentation,
+      KoaInstrumentation,
+    ],
   });
+
+  // const exporter = new Exporter({
+  //   serviceName,
+  // });
+
+  provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
 
   // Initialize the OpenTelemetry APIs to use the NodeTracerProvider bindings
   provider.register();
 
-  return api.trace.getTracer('koa-example');
+  return opentelemetry.trace.getTracer('default-tracer');
 };
