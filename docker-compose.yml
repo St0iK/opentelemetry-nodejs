@@ -5,6 +5,7 @@ services:
   mars-service:
     build:
       context: ./src/mars-service
+    container_name: mars-service
     env_file:
       - ./src/mars-service/.env.dev
       - ./src/mars-service/.env.secret
@@ -14,12 +15,23 @@ services:
     command: npm run dev
     ports:
       - "5000:80"
+    depends_on:
+      - redis
+    networks:
+      - playground
+
+  ## Redis
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
     networks:
       - playground
 
   # OpenTelemetry Collector
   collector:
     image: otel/opentelemetry-collector:latest
+    container_name: otlp-collector
     command: ["--config=/conf/collector-config.yaml", "--log-level=DEBUG"]
     volumes:
       - ./config/otlp-collector-config.yaml:/conf/collector-config.yaml
