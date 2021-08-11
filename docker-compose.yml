@@ -7,6 +7,7 @@ services:
       context: ./src/mars-service
     env_file:
       - ./src/mars-service/.env.dev
+      - ./src/mars-service/.env.secret
     volumes:
       - ./src/mars-service:/app
       - /app/node_modules
