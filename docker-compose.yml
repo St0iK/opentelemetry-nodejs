@@ -7,6 +7,10 @@ services:
       context: ./src/mars-service
     env_file:
       - ./src/mars-service/.env.dev
+    volumes:
+      - ./src/mars-service:/app
+      - /app/node_modules
+    command: npm run dev
     ports:
       - "5000:80"
     networks:

@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 
 RUN rm -rf node_modules
-RUN npm ci --only=production
+RUN npm ci
 
 FROM node:14-alpine
 
