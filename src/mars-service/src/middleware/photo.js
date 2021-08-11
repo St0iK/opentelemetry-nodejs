@@ -5,6 +5,5 @@ export default async (ctx) => {
   console.log(NasaApiConfig);
   const api = new NasaApi(NasaApiConfig);
   const res = await api.getLatestPhotos();
-
   ctx.body = res.data;
 };

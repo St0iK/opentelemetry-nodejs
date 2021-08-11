@@ -2,8 +2,9 @@ import axios from 'axios';
 
 class NasaApi {
 
-  constructor({baseUrl, apiKey}) {
-    this.baseUrl = baseUrl;
+  constructor({photosBaseUrl, weatherBaseUrl, apiKey}) {
+    this.photosBaseUrl = photosBaseUrl;
+    this.weatherBaseUrl = weatherBaseUrl;
     this.apiKey = apiKey;
   }
 
@@ -12,7 +13,11 @@ class NasaApi {
    * @returns {Promise<AxiosResponse<any>>}
    */
   async getLatestPhotos() {
-    return await axios.get(`${this.baseUrl}latest_photos?api_key=${this.apiKey}`);
+    return await axios.get(`${this.photosBaseUrl}latest_photos?api_key=${this.apiKey}`);
+  }
+
+  async getWeather() {
+    return await axios.get(this.weatherBaseUrl);
   }
 }
 
