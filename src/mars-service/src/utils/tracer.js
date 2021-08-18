@@ -14,6 +14,8 @@ const { CollectorTraceExporter } = require('@opentelemetry/exporter-collector');
 
 const { KoaInstrumentation } = require('@opentelemetry/instrumentation-koa');
 const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
+const { IORedisInstrumentation} = require('@opentelemetry/instrumentation-ioredis');
+
 
 module.exports = (serviceName) => {
 
@@ -41,6 +43,7 @@ module.exports = (serviceName) => {
       // Express instrumentation expects HTTP layer to be instrumented
       HttpInstrumentation,
       KoaInstrumentation,
+      new IORedisInstrumentation,
     ],
   });
 
