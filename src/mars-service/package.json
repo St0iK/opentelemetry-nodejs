@@ -24,10 +24,10 @@
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "getenv": "^1.0.0",
+    "ioredis": "^4.27.7",
     "koa": "^2.13.0",
     "koa-router": "^9.4.0",
-    "nodemon": "^2.0.4",
-    "redis": "^3.1.2"
+    "nodemon": "^2.0.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
